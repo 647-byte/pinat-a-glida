@@ -1,11 +1,22 @@
 import Product from "../models/products.model.js";
-const getAllProducts=async (req,res,next)=>{
-    try{
-    const result=await Product.find();
-    res.status(200).json(result);
+const getAllProducts = async (req, res, next) => {
+    try {
+        const result = await Product.find();
+        res.status(200).json(result);
     }
-    catch(err){
+    catch (err) {
         next(err);
     }
 }
-export {getAllProducts}
+const getSpecificProduct = async (req, res, next) => {
+    try {
+        const found = await Product.findById(req.params.id);
+        if(!found){
+            //בהמשך למלא
+        }
+        res.status(200).json(found);
+    } catch (err) {
+        next(err);
+    }
+}
+export { getAllProducts, getSpecificProduct }
