@@ -1,3 +1,4 @@
+import { isValidObjectId } from "mongoose";
 import Product from "../models/products.model.js";
 const getAllProducts = async (req, res, next) => {
     try {
@@ -10,12 +11,16 @@ const getAllProducts = async (req, res, next) => {
 }
 const getSpecificProduct = async (req, res, next) => {
     try {
-        const found = await Product.findById(req.params.id);
+        const { id } = req.params;
+        if (!isValidObjectId(id)) {
+            //כאן לטפל בשגיאה
+        }
+        const found = await Product.findById(id);
         if (!found) {
             //בהמשך למלא
         }
         res.status(200).json(found);
-    } 
+    }
     catch (err) {
         next(err);
     }
@@ -30,4 +35,20 @@ const addProduct = async (req, res, next) => {
         next(err);
     }
 }
-export { getAllProducts, getSpecificProduct,addProduct}
+const deleteProduct = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!isValidObjectId(id)) {
+            //כאן לטפל בשגיאה
+        }
+        const found = await Product.findByIdAndDelete(id);
+        if(!found){
+            //כאן לטפל בשגיאה
+        }
+        res.status(200).json(found);
+    }
+    catch (err) {
+        next(err);
+    }
+}
+export { getAllProducts, getSpecificProduct, addProduct,deleteProduct }
