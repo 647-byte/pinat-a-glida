@@ -42,7 +42,7 @@ const deleteProduct = async (req, res, next) => {
             //כאן לטפל בשגיאה
         }
         const found = await Product.findByIdAndDelete(id);
-        if(!found){
+        if (!found) {
             //כאן לטפל בשגיאה
         }
         res.status(200).json(found);
@@ -51,4 +51,19 @@ const deleteProduct = async (req, res, next) => {
         next(err);
     }
 }
-export { getAllProducts, getSpecificProduct, addProduct,deleteProduct }
+const updateProduct = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        if (!isValidObjectId(id)) {
+            //כאן לטפל בשגיאה
+        }
+        const found = await Product.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+        if (!found) {
+            //כאן לטפל בשגיאה
+        }
+        res.status(200).json(found);
+    } catch (err) {
+        next(err);
+    }
+}
+export { getAllProducts, getSpecificProduct, addProduct, deleteProduct, updateProduct }
