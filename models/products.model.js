@@ -23,6 +23,7 @@ const productSchema = new Schema(
         category: { type: String, required: true, trim: true },
         imageUrl: { type: String, required: true, trim: true },
         isAvailable: { type: Boolean, default: true },
+        quantity: { type: Number, min: 0, default: null },
         size: { type: [sizeSchema] },
         options: { type: [optionsSchema] }
     },

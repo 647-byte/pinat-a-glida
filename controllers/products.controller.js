@@ -66,4 +66,29 @@ const updateProduct = async (req, res, next) => {
         next(err);
     }
 }
-export { getAllProducts, getSpecificProduct, addProduct, deleteProduct, updateProduct }
+const updateQuantity = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { quantity, isAvailable } = req.body;
+        if (!isValidObjectId(id)) {
+            //כאן לטפל בשגיאה
+        }
+        if(typeof isAvailable !=="boolean"&&typeof quantity !== "number"){
+            //כאן לטפל בשגיאה
+        }
+        const found = await Product.findById(id);
+        if (!found) {
+            //כאן לטפל בשגיאה
+        }
+        if (typeof quantity === "number") {
+            found.quantity += quantity;
+            found.isAvailable = found.quantity > 0;
+        }
+        else found.isAvailable = isAvailable;
+        await found.save();
+        return res.status(200).json(found);
+    } catch (err) {
+        next(err);
+    }
+}
+export { getAllProducts, getSpecificProduct, addProduct, deleteProduct, updateProduct,updateQuantity }
