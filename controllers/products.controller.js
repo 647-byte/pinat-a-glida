@@ -13,7 +13,10 @@ const getSpecificProduct = async (req, res, next) => {
         const { id } = req.params;
         const found = await Product.findById(id);
         if (!found) {
-            //בהמשך למלא
+            const error = new Error("המוצר אינו נמצא");
+            error.status = 404;
+            error.type = "not_found";
+            return next(error);
         }
         res.status(200).json(found);
     }
@@ -36,7 +39,10 @@ const deleteProduct = async (req, res, next) => {
         const { id } = req.params;
         const found = await Product.findByIdAndDelete(id);
         if (!found) {
-            //כאן לטפל בשגיאה
+            const error = new Error("המוצר אינו נמצא");
+            error.status = 404;
+            error.type = "not_found";
+            return next(error);
         }
         res.status(200).json(found);
     }
@@ -49,7 +55,10 @@ const updateProduct = async (req, res, next) => {
         const { id } = req.params;
         const found = await Product.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
         if (!found) {
-            //כאן לטפל בשגיאה
+            const error = new Error("המוצר אינו נמצא");
+            error.status = 404;
+            error.type = "not_found";
+            return next(error);
         }
         res.status(200).json(found);
     } catch (err) {
@@ -60,12 +69,18 @@ const updateQuantity = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { quantity, isAvailable } = req.body;
-        if(typeof isAvailable !=="boolean"&&typeof quantity !== "number"){
-            //כאן לטפל בשגיאה
+        if (typeof isAvailable !== "boolean" && typeof quantity !== "number") {
+            const error = new Error("הנתונים שהתקבלו שגויים");
+            error.status = 400;
+            error.type = "bad_request";
+            return next(error);
         }
         const found = await Product.findById(id);
         if (!found) {
-            //כאן לטפל בשגיאה
+            const error = new Error("המוצר אינו נמצא");
+            error.status = 404;
+            error.type = "not_found";
+            return next(error);
         }
         if (typeof quantity === "number") {
             found.quantity += quantity;
@@ -78,4 +93,4 @@ const updateQuantity = async (req, res, next) => {
         next(err);
     }
 }
-export { getAllProducts, getSpecificProduct, addProduct, deleteProduct, updateProduct,updateQuantity }
+export { getAllProducts, getSpecificProduct, addProduct, deleteProduct, updateProduct, updateQuantity }
