@@ -1,10 +1,13 @@
 import { Router } from "express";
 import { getAllProducts,getSpecificProduct,addProduct,deleteProduct,updateProduct,updateQuantity } from "../controllers/products.controller.js";
+import { integrityCheck,integrityId } from "../middlewares/validate.middleware.js";
+import {productSchema} from "../validators/product.validator.js";
 const routerProducts=Router();
+routerProducts.param("id",integrityId);
 routerProducts.get("/",getAllProducts);
 routerProducts.get("/:id",getSpecificProduct);
-routerProducts.post("/",addProduct);
+routerProducts.post("/",integrityCheck(productSchema),addProduct);
 routerProducts.delete("/:id",deleteProduct);
-routerProducts.put("/:id",updateProduct);
+routerProducts.put("/:id",integrityCheck(productSchema),updateProduct);
 routerProducts.patch("/:id",updateQuantity);
 export default routerProducts;

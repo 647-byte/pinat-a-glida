@@ -1,4 +1,3 @@
-import { isValidObjectId } from "mongoose";
 import Product from "../models/products.model.js";
 const getAllProducts = async (req, res, next) => {
     try {
@@ -12,9 +11,6 @@ const getAllProducts = async (req, res, next) => {
 const getSpecificProduct = async (req, res, next) => {
     try {
         const { id } = req.params;
-        if (!isValidObjectId(id)) {
-            //כאן לטפל בשגיאה
-        }
         const found = await Product.findById(id);
         if (!found) {
             //בהמשך למלא
@@ -38,9 +34,6 @@ const addProduct = async (req, res, next) => {
 const deleteProduct = async (req, res, next) => {
     try {
         const { id } = req.params;
-        if (!isValidObjectId(id)) {
-            //כאן לטפל בשגיאה
-        }
         const found = await Product.findByIdAndDelete(id);
         if (!found) {
             //כאן לטפל בשגיאה
@@ -54,9 +47,6 @@ const deleteProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
     try {
         const { id } = req.params;
-        if (!isValidObjectId(id)) {
-            //כאן לטפל בשגיאה
-        }
         const found = await Product.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
         if (!found) {
             //כאן לטפל בשגיאה
@@ -70,9 +60,6 @@ const updateQuantity = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { quantity, isAvailable } = req.body;
-        if (!isValidObjectId(id)) {
-            //כאן לטפל בשגיאה
-        }
         if(typeof isAvailable !=="boolean"&&typeof quantity !== "number"){
             //כאן לטפל בשגיאה
         }
