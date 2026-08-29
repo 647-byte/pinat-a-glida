@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { getAllProducts,getSpecificProduct,addProduct,deleteProduct,updateProduct,updateQuantity } from "../controllers/products.controller.js";
 import { integrityCheck,integrityId } from "../middlewares/validate.middleware.js";
-import {productSchema} from "../validators/product.validator.js";
+import productSchema from "../validators/product.validator.js";
 const routerProducts=Router();
 routerProducts.param("id",integrityId);
 routerProducts.get("/",getAllProducts);
