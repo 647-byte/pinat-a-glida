@@ -15,6 +15,7 @@
     "@hebcal/core": "^6.9.2",
     "express": "^5.2.1",
     "joi": "^18.2.5",
-    "mongoose": "^9.9.3"
+    "mongoose": "^9.9.3",
+    "multer": "^2.3.0"
   }
 }
