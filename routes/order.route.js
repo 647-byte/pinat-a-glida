@@ -1,9 +1,12 @@
 import { Router } from "express";
-import { getAllOrders,getOrderById,getUserOrders,createOrder,updateOrderStatus } from "../controllers/order.controller.js";
+import orderSchema from '../validators/order.validator.js';
+import { integrityCheck,integrityId } from "../middlewares/validate.middleware.js";
+import { getAllOrders, getOrderById, getUserOrders, createOrder, updateOrderStatus } from "../controllers/order.controller.js";
 const routerOrders = Router();
+routerOrders.param(["id", "userId"],integrityId);
 routerOrders.get("/", getAllOrders);
 routerOrders.get("/:id", getOrderById);
 routerOrders.get("/user/:userId", getUserOrders);
-routerOrders.post("/", createOrder);
+routerOrders.post("/", integrityCheck(orderSchema), createOrder);
 routerOrders.patch("/:id/status", updateOrderStatus);
 export default routerOrders;
