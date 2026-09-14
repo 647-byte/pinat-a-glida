@@ -32,4 +32,13 @@ const getUserOrders = async (req, res, next) => {
         next(err);
     }
 };
-export { getAllOrders, getOrderById, getUserOrders };
+const createOrder = async (req, res, next) => {
+    try {
+        const newOrder = new Order(req.body);
+        const savedOrder = await newOrder.save();
+        res.status(201).json(savedOrder);
+    } catch (err) {
+        next(err);
+    }
+};
+export { getAllOrders, getOrderById, getUserOrders,createOrder};
