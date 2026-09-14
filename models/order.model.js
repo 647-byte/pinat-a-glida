@@ -45,7 +45,7 @@ const orderSchema = new Schema({
     comments: { type: String },
     statusOrder: {
         type: String,
-        enum: ['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'],
+        enum: ['pending', 'preparing', 'on_the_way', 'delivered'],
         default: 'Pending'
     }
 },
