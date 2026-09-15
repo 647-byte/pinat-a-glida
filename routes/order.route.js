@@ -1,12 +1,14 @@
 import { Router } from "express";
 import orderSchema from '../validators/order.validator.js';
-import { integrityCheck,integrityId } from "../middlewares/validate.middleware.js";
+import { integrityCheck, integrityId } from "../middlewares/validate.middleware.js";
 import { getAllOrders, getOrderById, getUserOrders, createOrder, updateOrderStatus } from "../controllers/order.controller.js";
+import { orderHoursMiddleware } from "../middlewares/operatingHours.middleware.js";
+import { env } from "../config/env.js";
 const routerOrders = Router();
-routerOrders.param(["id", "userId"],integrityId);
+routerOrders.param(["id", "userId"], integrityId);
 routerOrders.get("/", getAllOrders);
 routerOrders.get("/:id", getOrderById);
 routerOrders.get("/user/:userId", getUserOrders);
-routerOrders.post("/", integrityCheck(orderSchema), createOrder);
+routerOrders.post("/", orderHoursMiddleware(env.ORDER_OPENING_TIME, env.ORDER_CLOSING_TIME), integrityCheck(orderSchema), createOrder);
 routerOrders.patch("/:id/status", updateOrderStatus);
 export default routerOrders;

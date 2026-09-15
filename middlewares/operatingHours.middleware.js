@@ -15,12 +15,16 @@ const getDailyEvents = () => {
 }
 let arrDailyEvents = getDailyEvents();
 let dateToday = new Date().toDateString();
-const isShabbatOrHolidayNow = () => {
+const isShabbatOrHolidayNow = (space) => {
     let inEvent = false;
+    const now = new Date();
+    if (dateToday !== now.toDateString()) {
+        arrDailyEvents = getDailyEvents();
+        dateToday = new Date().toDateString();
+    }
     for (const ev of arrDailyEvents) {
         const time = ev.eventTime.getTime();
         const nowTime = new Date().getTime();
-        const space = 15 * 60 * 1000;
         if (ev.constructor.name === "CandleLightingEvent") {
             if (nowTime + space >= time)
                 inEvent = true;
@@ -38,12 +42,8 @@ const isShabbatOrHolidayNow = () => {
 }
 const operatingHoursMiddleware = (req, res, next) => {
     try {
-        const now = new Date();
-        if (dateToday !== now.toDateString()) {
-            arrDailyEvents = getDailyEvents();
-            dateToday = new Date().toDateString();
-        }
-        if (isShabbatOrHolidayNow()) {
+        const space = 15 * 60 * 1000;
+        if (isShabbatOrHolidayNow(space)) {
             const error = new Error("האתר אינו פעיל בשבתות וחגים");
             error.status = 403;
             error.type = "not_activity";
@@ -55,4 +55,22 @@ const operatingHoursMiddleware = (req, res, next) => {
         next(err);
     }
 }
-export default operatingHoursMiddleware;
+const orderHoursMiddleware = (timeOpening="10:00", timeClosed="22:00") => {
+    return (req, res, next) => {
+        try {
+            const now = new Date();
+            const currentTime = now.toTimeString().slice(0, 5);
+            const space = 60 * 60 * 1000;
+            if (currentTime < timeOpening || currentTime >= timeClosed || isShabbatOrHolidayNow(space)) {
+                const error = new Error(`שעות הפעילות הינן ${timeOpening}-${timeClosed}`);
+                error.status = 403;
+                error.type = "not_activity";
+                return next(error);
+            }
+            next();
+        } catch (err) {
+            next(err);
+        }
+    }
+}
+export {operatingHoursMiddleware,orderHoursMiddleware};
