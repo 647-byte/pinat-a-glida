@@ -13,6 +13,7 @@
   "type": "module",
   "dependencies": {
     "@hebcal/core": "^6.9.2",
+    "cors": "^2.8.6",
     "express": "^5.2.1",
     "joi": "^18.2.5",
     "mongoose": "^9.9.3",
