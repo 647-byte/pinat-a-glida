@@ -5,7 +5,8 @@ import { getAllOrders, getOrderById, getUserOrders, createOrder, updateOrderStat
 import { orderHoursMiddleware } from "../middlewares/operatingHours.middleware.js";
 import { env } from "../config/env.js";
 const routerOrders = Router();
-routerOrders.param(["id", "userId"], integrityId);
+routerOrders.param("id", integrityId);
+routerOrders.param("userId", integrityId);
 routerOrders.get("/", getAllOrders);
 routerOrders.get("/:id", getOrderById);
 routerOrders.get("/user/:userId", getUserOrders);

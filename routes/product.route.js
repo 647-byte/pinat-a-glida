@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { getAllProducts,getSpecificProduct,addProduct,deleteProduct,updateProduct,updateQuantity } from "../controllers/products.controller.js";
+import { getAllProducts,getSpecificProduct,getPopularProducts,addProduct,deleteProduct,updateProduct,updateQuantity } from "../controllers/products.controller.js";
 import { integrityCheck,integrityId } from "../middlewares/validate.middleware.js";
 import productSchema from "../validators/product.validator.js";
 import uploadMiddleware from "../middlewares/upload.middleware.js";
 const routerProducts=Router();
 routerProducts.param("id",integrityId);
 routerProducts.get("/",getAllProducts);
+routerProducts.get("/popular", getPopularProducts);
 routerProducts.get("/:id",getSpecificProduct);
 routerProducts.post("/",uploadMiddleware('imageUrl'),integrityCheck(productSchema),addProduct);
 routerProducts.delete("/:id",deleteProduct);

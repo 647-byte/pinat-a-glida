@@ -24,6 +24,23 @@ const getSpecificProduct = async (req, res, next) => {
         next(err);
     }
 }
+const getPopularProducts = async (req, res, next) => {
+    try {
+        let products = await Product.find({ isPopular: true });
+        if (!products || products.length === 0) {
+            products = await Product.find().limit(8);
+        }
+        if (!products || products.length === 0) {
+            const error = new Error("לא נמצאו מוצרים במערכת");
+            error.status = 404;
+            error.type = "not_found";
+            return next(error);
+        }
+        res.status(200).json(products);
+    } catch (err) {
+        next(err);
+    }
+};
 const addProduct = async (req, res, next) => {
     try {
         //אין צורך לעשות בדיקות תקינות כאן כי זה יעשה כבר ע"י JOI 
@@ -93,4 +110,4 @@ const updateQuantity = async (req, res, next) => {
         next(err);
     }
 }
-export { getAllProducts, getSpecificProduct, addProduct, deleteProduct, updateProduct, updateQuantity }
+export { getAllProducts, getSpecificProduct, addProduct, deleteProduct, updateProduct, updateQuantity,getPopularProducts }

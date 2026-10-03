@@ -23,6 +23,7 @@ const isShabbatOrHolidayNow = (space) => {
         dateToday = new Date().toDateString();
     }
     for (const ev of arrDailyEvents) {
+        if (!ev.eventTime) continue;
         const time = ev.eventTime.getTime();
         const nowTime = new Date().getTime();
         if (ev.constructor.name === "CandleLightingEvent") {
