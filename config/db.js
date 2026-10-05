@@ -1,5 +1,6 @@
 import { connect } from "mongoose";
 import { env } from "./env.js";
+import { exit } from "process";
 
 const connectDB = async () => {
     try {
