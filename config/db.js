@@ -1,3 +1,6 @@
+import dns from "node:dns";
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
 import { connect } from "mongoose";
 import { env } from "./env.js";
 import { exit } from "process";
