@@ -1,7 +1,8 @@
+import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { env } from "../config/env.js";
 
-const authenticate = (req, res, next) => {
+const authenticate = async (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
         const error = new Error("יש להתחבר כדי לבצע פעולה זו");
@@ -12,7 +13,14 @@ const authenticate = (req, res, next) => {
     const token = authHeader.split(" ")[1];
     try {
         const decoded = jwt.verify(token, env.JWT_SECRET);
-        req.user = { id: decoded.id, role: decoded.role };
+        const user = await User.findById(decoded.id);
+        if (!user) {
+            const error = new Error("המשתמש אינו קיים, יש להתחבר מחדש");
+            error.status = 401;
+            error.type = "unauthorized";
+            return next(error);
+        }
+        req.user = { id: user._id.toString(), role: user.role };
         next();
     } catch (err) {
         const error = new Error("ההתחברות אינה תקפה, יש להתחבר מחדש");
