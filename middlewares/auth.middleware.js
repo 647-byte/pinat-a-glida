@@ -12,7 +12,7 @@ const authenticate = async (req, res, next) => {
     }
     const token = authHeader.split(" ")[1];
     try {
-        const decoded = jwt.verify(token, env.JWT_SECRET);
+        const decoded = jwt.verify(token, env.JWT_SECRET, { algorithms: ["HS256"] });
         const user = await User.findById(decoded.id);
         if (!user) {
             const error = new Error("המשתמש אינו קיים, יש להתחבר מחדש");
