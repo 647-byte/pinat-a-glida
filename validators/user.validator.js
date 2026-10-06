@@ -5,22 +5,22 @@ const registerSchema = Joi.object({
     email: Joi.string().required().trim().email(),
     password: Joi.string().required().min(6),
     phone: Joi.string().trim().pattern(/^0\d{8,9}$/)
-});
+}).required();
 
 const loginSchema = Joi.object({
     email: Joi.string().required().trim().email(),
     password: Joi.string().required()
-});
+}).required();
 
 const updateUserSchema = Joi.object({
     name: Joi.string().trim().min(2),
     email: Joi.string().trim().email(),
     password: Joi.string().min(6),
     phone: Joi.string().trim().pattern(/^0\d{8,9}$/)
-}).min(1);
+}).min(1).required();
 
 const roleSchema = Joi.object({
     role: Joi.string().valid('customer', 'admin').required()
-});
+}).required();
 
 export { registerSchema, loginSchema, updateUserSchema, roleSchema };
