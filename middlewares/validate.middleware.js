@@ -8,7 +8,7 @@ const integrityCheck = (schema) => {
             const err = new Error(errorMessage);
             err.status = 400;
             err.type = "validation_error";
-            return next(error);
+            return next(err);
         }
         next();
     }

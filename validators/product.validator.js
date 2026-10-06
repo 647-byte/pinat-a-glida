@@ -22,6 +22,7 @@ const productSchema = Joi.object({
     isAvailable: Joi.boolean().default(true),
     quantity: Joi.number().min(0).allow(null).default(null).integer(),
     size: Joi.array().items(sizeSchema),
-    options: Joi.array().items(optionsSchema)
+    options: Joi.array().items(optionsSchema),
+    isPopular:Joi.boolean().default(false)
 })
 export default productSchema;
