@@ -2,7 +2,7 @@ import { isValidObjectId } from "mongoose";
 
 const integrityCheck = (schema) => {
     return (req, res, next) => {
-        const { error } = schema.validate(req.body, { abortEarly: false });
+        const { error, value } = schema.validate(req.body, { abortEarly: false });
         if (error) {
             const errorMessage = error.details.map(detail => detail.message).join(',\n');
             const err = new Error(errorMessage);
@@ -10,6 +10,7 @@ const integrityCheck = (schema) => {
             err.type = "validation_error";
             return next(err);
         }
+        req.body = value;
         next();
     }
 }
