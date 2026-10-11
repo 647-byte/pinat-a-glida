@@ -46,7 +46,7 @@ const orderSchema = new Schema({
     statusOrder: {
         type: String,
         enum: ['pending', 'preparing', 'on_the_way', 'delivered'],
-        default: 'Pending'
+        default: 'pending'
     }
 },
     { timestamps: true })
