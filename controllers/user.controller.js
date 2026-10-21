@@ -1,9 +1,10 @@
 import User from "../models/user.model.js";
 import { generateToken } from "../utils/token.js";
+import { findUserByEmail, checkPassword } from "../services/user.service.js";
 
 const register = async (req, res, next) => {
     try {
-        const exists = await User.findByEmail(req.body.email);
+        const exists = await findUserByEmail(req.body.email);
         if (exists) {
             const error = new Error("כתובת המייל כבר רשומה במערכת");
             error.status = 409;
@@ -22,8 +23,8 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-        const user = await User.findByEmail(email);
-        if (!user || !(await user.comparePassword(password))) {
+        const user = await findUserByEmail(email);
+        if (!user || !(await checkPassword(password, user.password))) {
             const error = new Error("מייל או סיסמה שגויים");
             error.status = 401;
             error.type = "unauthorized";
@@ -61,7 +62,7 @@ const updateMe = async (req, res, next) => {
             return next(error);
         }
         if (req.body.email && req.body.email.toLowerCase() !== user.email) {
-            const exists = await User.findByEmail(req.body.email);
+            const exists = await findUserByEmail(req.body.email);
             if (exists) {
                 const error = new Error("כתובת המייל כבר רשומה במערכת");
                 error.status = 409;
@@ -106,7 +107,7 @@ const deleteUser = async (req, res, next) => {
     try {
         const { id } = req.params;
         if (id === req.user.id) {
-            const error = new Error("לא ניתן למחוק את המשתמש שלך עקב היותך מנהל");
+            const error = new Error("לא ניתן למחוק את המשתמש שלך עקב היותך מנהל");//אם יש לי כמה מנהלים צריך לבדוק על כולם?
             error.status = 400;
             error.type = "bad_request";
             return next(error);

@@ -18,14 +18,6 @@ userSchema.pre('save', async function () {
     this.password = await bcrypt.hash(this.password, 10);
 });
 
-userSchema.methods.comparePassword = function (plainPassword) {
-    return bcrypt.compare(plainPassword, this.password);
-};
-
-userSchema.statics.findByEmail = function (email) {
-    return this.findOne({ email: email.toLowerCase() });
-};
-
 userSchema.set('toJSON', {
     transform: (doc, ret) => {
         delete ret.password;
