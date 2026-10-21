@@ -1,12 +1,12 @@
 import multer from "multer";
-import path from "path";
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        return cb(null, "uploads");
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../config/cloudinary.js";
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "pinat-a-glida-uploads", // שם התיקייה שתופיע בענן
+        allowed_formats: ["jpg", "png", "jpeg", "webp"], // אילו קבצים מותר להעלות
     },
-    filename: (req, file, cb) => {
-        return cb(null, Date.now() + path.extname(file.originalname));
-    }
-})
+});
 const upload = multer({ storage: storage });
 export default upload;
