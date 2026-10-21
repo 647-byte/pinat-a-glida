@@ -20,7 +20,6 @@ const productSchema = new Schema(
         name: { type: String, unique: true, required: true, trim: true },
         price: { type: Number, required: true, default: 0, min: 0 },
         description: { type: String, trim: true },
-        category: { type: String, required: true, trim: true },
         imageUrl: { type: String, required: true, trim: true },
         isAvailable: { type: Boolean, default: true },
         quantity: { type: Number, min: 0, default: null },

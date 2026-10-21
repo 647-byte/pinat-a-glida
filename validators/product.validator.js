@@ -17,11 +17,11 @@ const productSchema = Joi.object({
     name: Joi.string().required().trim(),
     price: Joi.number().required().default(0).min(0),
     description: Joi.string().trim(),
-    category: Joi.string().required().trim(),
     imageUrl: Joi.string().required().trim(),
     isAvailable: Joi.boolean().default(true),
     quantity: Joi.number().min(0).allow(null).default(null).integer(),
     size: Joi.array().items(sizeSchema),
-    options: Joi.array().items(optionsSchema)
+    options: Joi.array().items(optionsSchema),
+    isPopular:Joi.boolean().default(false)
 })
 export default productSchema;
