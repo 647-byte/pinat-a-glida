@@ -106,19 +106,20 @@ const getUserById = async (req, res, next) => {
 const deleteUser = async (req, res, next) => {
     try {
         const { id } = req.params;
-        if (id === req.user.id) {
-            const error = new Error("לא ניתן למחוק את המשתמש שלך עקב היותך מנהל");//אם יש לי כמה מנהלים צריך לבדוק על כולם?
-            error.status = 400;
-            error.type = "bad_request";
-            return next(error);
-        }
-        const user = await User.findByIdAndDelete(id);
+        const user = await User.findById(id);
         if (!user) {
             const error = new Error("המשתמש אינו נמצא");
             error.status = 404;
             error.type = "not_found";
             return next(error);
         }
+        if (user.role === "admin") {
+            const error = new Error("לא ניתן למחוק מנהל. יש לשנות קודם את תפקידו ללקוח");
+            error.status = 400;
+            error.type = "bad_request";
+            return next(error);
+        }
+        await user.deleteOne();
         res.status(200).json(user);
     } catch (err) {
         next(err);
