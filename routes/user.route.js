@@ -3,12 +3,13 @@ import { register, login, getMe, updateMe, getAllUsers, getUserById, deleteUser,
 import { integrityCheck, integrityId } from "../middlewares/validate.middleware.js";
 import { authenticate, authorize } from "../middlewares/auth.middleware.js";
 import { registerSchema, loginSchema, updateUserSchema, roleSchema } from "../validators/user.validator.js";
+import { authLimiter } from "../middlewares/rateLimit.middleware.js";
 
 const routerUsers = Router();
 routerUsers.param("id", integrityId);
 
-routerUsers.post("/register", integrityCheck(registerSchema), register);
-routerUsers.post("/login", integrityCheck(loginSchema), login);
+routerUsers.post("/register", authLimiter, integrityCheck(registerSchema), register);
+routerUsers.post("/login", authLimiter, integrityCheck(loginSchema), login);
 
 routerUsers.get("/me", authenticate, getMe);
 routerUsers.patch("/me", authenticate, integrityCheck(updateUserSchema), updateMe);
