@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import { generateToken } from "../utils/token.js";
 import { findUserByEmail, checkPassword } from "../services/user.service.js";
+import Order from "../models/order.model.js";
 
 const register = async (req, res, next) => {
     try {
@@ -115,6 +116,13 @@ const deleteUser = async (req, res, next) => {
         }
         if (user.role === "admin") {
             const error = new Error("לא ניתן למחוק מנהל. יש לשנות קודם את תפקידו ללקוח");
+            error.status = 400;
+            error.type = "bad_request";
+            return next(error);
+        }
+        const hasOrders = await Order.exists({ userId: id });
+        if (hasOrders) {
+            const error = new Error("לא ניתן למחוק משתמש שיש לו הזמנות");
             error.status = 400;
             error.type = "bad_request";
             return next(error);
