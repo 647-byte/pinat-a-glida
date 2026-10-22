@@ -7,7 +7,7 @@ const uploadImageController = (req, res, next) => {
         return next(error);
     }
     // בניית הנתיב לתמונה
-    const imageUrl = `/uploads/${req.file.filename}`;
+    const imageUrl = req.file.path;
     // החזרת תשובה נקייה ללקוח
     return res.status(200).json({ imageUrl: imageUrl });
 };
