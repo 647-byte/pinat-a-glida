@@ -15,7 +15,6 @@ connectDB();
 app.use(cors(corsOptions));
 app.use(operatingHoursMiddleware);
 app.use(express.json());//מאפשר לקבל body-אובייקט
-app.use('/uploads',express.static('uploads'));//מאפשר להציג את התמונות ללקוחות
 app.use('/',mainRouter);
 app.use(pageNotFound);
 app.use(errorHandler);
