@@ -33,11 +33,9 @@ const customSchema = Joi.object(
         phone: Joi.string().required().trim()
     })
 const orderSchema = Joi.object({
-    userId: Joi.string().hex().length(24).required(),
     items: Joi.array().items(itemSchema).required().min(1),
     customerDetails: customSchema.required(),
     totalPrice: Joi.number().required().default(0).min(0),
-    comments: Joi.string().allow('', null),
-    statusOrder: Joi.string().valid('pending', 'preparing', 'on_the_way', 'delivered').default('pending')
+    comments: Joi.string().allow('', null)
 })
 export default orderSchema;

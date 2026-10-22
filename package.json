@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node --env-file=.env app.js",
-    "dev": "node --env-file=.env --watch app.js"
+    "dev": "node --env-file=.env --watch app.js",
+    "seed": "node --env-file=.env scripts/seed.js"
   },
   "keywords": [],
   "author": "",
@@ -13,10 +14,13 @@
   "type": "module",
   "dependencies": {
     "@hebcal/core": "^6.9.2",
+    "bcrypt": "^6.0.0",
     "cloudinary": "^1.41.3",
     "cors": "^2.8.6",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.7.1",
     "joi": "^18.2.5",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.9.3",
     "multer": "^2.3.0",
     "multer-storage-cloudinary": "^4.0.0"

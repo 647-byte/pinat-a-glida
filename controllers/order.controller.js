@@ -18,6 +18,12 @@ const getOrderById = async (req, res, next) => {
             error.type = "not_found";
             return next(error);
         }
+         if (req.user.role !== "admin" && order.userId.toString() !== req.user.id) {
+            const error = new Error("אין לך הרשאה לצפות בהזמנה זו");
+            error.status = 403;
+            error.type = "forbidden";
+            return next(error);
+        }
         res.status(200).json(order);
     } catch (err) {
         next(err);
@@ -34,7 +40,7 @@ const getUserOrders = async (req, res, next) => {
 };
 const createOrder = async (req, res, next) => {
     try {
-        const newOrder = new Order(req.body);
+        const newOrder = new Order({ ...req.body, userId: req.user.id });
         const savedOrder = await newOrder.save();
         res.status(201).json(savedOrder);
     } catch (err) {
@@ -73,4 +79,12 @@ const updateOrderStatus = async (req, res, next) => {
         next(err);
     }
 };
-export { getAllOrders, getOrderById, getUserOrders, createOrder,updateOrderStatus };
+const getMyOrders = async (req, res, next) => {
+    try {
+        const orders = await Order.find({ userId: req.user.id }).populate('items.productId', 'imageUrl');
+        res.status(200).json(orders);
+    } catch (err) {
+        next(err);
+    }
+};
+export { getAllOrders, getOrderById, getUserOrders, getMyOrders, createOrder, updateOrderStatus };
