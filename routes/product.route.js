@@ -3,13 +3,14 @@ import { getAllProducts,getSpecificProduct,getPopularProducts,addProduct,deleteP
 import { integrityCheck,integrityId } from "../middlewares/validate.middleware.js";
 import productSchema from "../validators/product.validator.js";
 import uploadMiddleware from "../middlewares/upload.middleware.js";
+import { authenticate, authorize } from "../middlewares/auth.middleware.js";
 const routerProducts=Router();
 routerProducts.param("id",integrityId);
 routerProducts.get("/",getAllProducts);
 routerProducts.get("/popular", getPopularProducts);
 routerProducts.get("/:id",getSpecificProduct);
-routerProducts.post("/",integrityCheck(productSchema),addProduct);
-routerProducts.delete("/:id",deleteProduct);
-routerProducts.put("/:id",integrityCheck(productSchema),updateProduct);
-routerProducts.patch("/:id",updateQuantity);
+routerProducts.post("/", authenticate, authorize("admin"), integrityCheck(productSchema), addProduct);
+routerProducts.delete("/:id", authenticate, authorize("admin"), deleteProduct);
+routerProducts.put("/:id", authenticate, authorize("admin"), integrityCheck(productSchema), updateProduct);
+routerProducts.patch("/:id", authenticate, authorize("admin"), updateQuantity);
 export default routerProducts;
