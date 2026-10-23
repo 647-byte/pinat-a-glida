@@ -1,4 +1,5 @@
 import Order from '../models/order.model.js';
+import { buildOrderItems, decreaseStock } from "../services/order.service.js";
 const getAllOrders = async (req, res, next) => {
     try {
         //populate נועד כדי להמיר את ה ID ששמור בפרטים הרלוונטיים
@@ -40,8 +41,16 @@ const getUserOrders = async (req, res, next) => {
 };
 const createOrder = async (req, res, next) => {
     try {
-        const newOrder = new Order({ ...req.body, userId: req.user.id });
+        const { items, totalPrice, neededQuantity } = await buildOrderItems(req.body.items);
+        const newOrder = new Order({
+            items,
+            totalPrice,
+            customerDetails: req.body.customerDetails,
+            comments: req.body.comments,
+            userId: req.user.id
+        });
         const savedOrder = await newOrder.save();
+        await decreaseStock(neededQuantity);
         res.status(201).json(savedOrder);
     } catch (err) {
         next(err);
