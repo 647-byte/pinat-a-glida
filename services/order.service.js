@@ -1,5 +1,5 @@
 import Product from "../models/products.model.js";
-import "../models/optionGroup.js"; 
+import "../models/optionGroup.model.js";
 
 const FLAVORS_TITLE = "טעמים";
 
