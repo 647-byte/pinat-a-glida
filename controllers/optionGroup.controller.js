@@ -1,4 +1,4 @@
-import OptionGroup from '../models/optionGroup.js';
+import OptionGroup from '../models/optionGroup.model.js';
 
 // שליפת כל קבוצות התוספות הקיימות במערכת
 const getOptionGroups = async (req, res,next) => {
