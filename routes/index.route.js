@@ -3,7 +3,9 @@ import routerProducts from "./product.route.js";
 import routerOrders from "./order.route.js";
 import routerUsers from "./user.route.js";
 import routerUpload from "./upload.router.js";
+import routerOptionGroup from './optionGroupRoutes.js'
 const mainRouter = Router();
+mainRouter.use('/optionGroup',routerOptionGroup);
 mainRouter.use('/upload', routerUpload);
 mainRouter.use('/products', routerProducts);
 mainRouter.use('/orders', routerOrders);

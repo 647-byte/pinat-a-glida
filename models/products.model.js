@@ -6,15 +6,7 @@ const sizeSchema = new Schema(
         maxChoices: { type: Number, min: 1 }
     },
     { _id: false });
-const optionsSchema = new Schema(
-    {
-        title: { type: String, required: true, trim: true },
-        isMust: { type: Boolean, default: true },
-        maxChoices: { type: Number, required: true, min: 1 },
-        pricePer: { type: Number, default: 0, min: 0 },
-        choices: [{ type: String, trim: true }]
-    },
-    { _id: false });
+
 const productSchema = new Schema(
     {
         name: { type: String, unique: true, required: true, trim: true },
@@ -24,7 +16,7 @@ const productSchema = new Schema(
         isAvailable: { type: Boolean, default: true },
         quantity: { type: Number, min: 0, default: null },
         size: { type: [sizeSchema] },
-        options: { type: [optionsSchema] },
+        options: [{ type: Schema.Types.ObjectId, ref: 'OptionGroup' }],
         isPopular: { type: Boolean, default: false }
     },
     { timestamps: true }

@@ -5,14 +5,6 @@ const sizeSchema = Joi.object(
         price: Joi.number().required().min(0),
         maxChoices: Joi.number().min(1).integer()
     });
-const optionsSchema = Joi.object(
-    {
-        title: Joi.string().required().trim(),
-        isMust: Joi.boolean().default(true),
-        maxChoices: Joi.number().required().min(1).integer(),
-        pricePer: Joi.number().default(0).min(0),
-        choices: Joi.array().items(Joi.string().trim())
-    });
 const productSchema = Joi.object({
     name: Joi.string().required().trim(),
     price: Joi.number().required().default(0).min(0),
@@ -21,7 +13,7 @@ const productSchema = Joi.object({
     isAvailable: Joi.boolean().default(true),
     quantity: Joi.number().min(0).allow(null).default(null).integer(),
     size: Joi.array().items(sizeSchema),
-    options: Joi.array().items(optionsSchema),
+    options: Joi.array().items(Joi.string().hex().length(24)),
     isPopular:Joi.boolean().default(false)
 })
 export default productSchema;

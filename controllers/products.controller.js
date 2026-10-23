@@ -1,7 +1,7 @@
 import Product from "../models/products.model.js";
 const getAllProducts = async (req, res, next) => {
     try {
-        const result = await Product.find();
+        const result = await Product.find().populate('options');
         res.status(200).json(result);
     }
     catch (err) {
@@ -11,7 +11,7 @@ const getAllProducts = async (req, res, next) => {
 const getSpecificProduct = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const found = await Product.findById(id);
+        const found = await Product.findById(id).populate('options');
         if (!found) {
             const error = new Error("המוצר אינו נמצא");
             error.status = 404;
@@ -26,9 +26,9 @@ const getSpecificProduct = async (req, res, next) => {
 }
 const getPopularProducts = async (req, res, next) => {
     try {
-        let products = await Product.find({ isPopular: true });
+        let products = await Product.find({ isPopular: true }).populate('options');
         if (!products || products.length === 0) {
-            products = await Product.find().limit(8);
+            products = await Product.find().populate('options').limit(8);
         }
         if (!products || products.length === 0) {
             const error = new Error("לא נמצאו מוצרים במערכת");
@@ -45,7 +45,8 @@ const addProduct = async (req, res, next) => {
     try {
         //אין צורך לעשות בדיקות תקינות כאן כי זה יעשה כבר ע"י JOI 
         const newProduct = new Product(req.body);
-        const result = await newProduct.save();
+        await newProduct.save();
+        const result = await Product.findById(newProduct._id).populate('options');
         res.status(201).json(result);
     } catch (err) {
         next(err);
@@ -54,7 +55,7 @@ const addProduct = async (req, res, next) => {
 const deleteProduct = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const found = await Product.findByIdAndDelete(id);
+        const found = await Product.findByIdAndDelete(id).populate('options');
         if (!found) {
             const error = new Error("המוצר אינו נמצא");
             error.status = 404;
@@ -70,7 +71,7 @@ const deleteProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const found = await Product.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
+        const found = await Product.findByIdAndUpdate(id, req.body, { new: true, runValidators: true }).populate('options');
         if (!found) {
             const error = new Error("המוצר אינו נמצא");
             error.status = 404;
@@ -92,7 +93,7 @@ const updateQuantity = async (req, res, next) => {
             error.type = "bad_request";
             return next(error);
         }
-        const found = await Product.findById(id);
+        const found = await Product.findById(id).populate('options');
         if (!found) {
             const error = new Error("המוצר אינו נמצא");
             error.status = 404;
