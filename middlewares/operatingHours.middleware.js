@@ -97,7 +97,7 @@ const orderHoursMiddleware = (timeOpening="10:00", timeClosed="22:00") => {
             if (currentTime < timeOpening || currentTime >= timeClosed || isShabbatOrHolidayNow(space)) {
                 const error = new Error(`שעות הפעילות הינן ${timeOpening}-${timeClosed}`);
                 error.status = 403;
-                error.type = "not_activity";
+                error.type = "orders_closed";
                 return next(error);
             }
             next();
