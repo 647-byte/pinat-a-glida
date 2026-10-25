@@ -81,7 +81,7 @@ const updateMe = async (req, res, next) => {
 
 const getAllUsers = async (req, res, next) => {
     try {
-        const users = await User.find();
+        const users = await User.find().sort({ createdAt: -1 });
         res.status(200).json(users);
     } catch (err) {
         next(err);
