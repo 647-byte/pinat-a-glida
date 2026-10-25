@@ -4,7 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "start": "node --env-file=.env app.js",
+    "start": "node app.js",
     "dev": "node --env-file=.env --watch app.js",
     "seed": "node --env-file=.env scripts/seed.js",
     "migrate:size-limits": "node --env-file=.env scripts/markSizeLimitedGroups.js"
