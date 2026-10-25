@@ -2,8 +2,11 @@ import Order from '../models/order.model.js';
 import { buildOrderItems, decreaseStock } from "../services/order.service.js";
 const getAllOrders = async (req, res, next) => {
     try {
-        //populate נועד כדי להמיר את ה ID ששמור בפרטים הרלוונטיים
-        const orders = await Order.find().populate('userId', 'name email').populate('items.productId', 'imageUrl');
+        // Newest first; populate replaces the stored ids with the related details
+        const orders = await Order.find()
+            .sort({ createdAt: -1 })
+            .populate('userId', 'name email')
+            .populate('items.productId', 'imageUrl');
         res.status(200).json(orders);
     } catch (err) {
         next(err);
@@ -33,7 +36,9 @@ const getOrderById = async (req, res, next) => {
 const getUserOrders = async (req, res, next) => {
     try {
         const { userId } = req.params;
-        const orders = await Order.find({ userId }).populate('items.productId', 'imageUrl');;
+        const orders = await Order.find({ userId })
+            .sort({ createdAt: -1 })
+            .populate('items.productId', 'imageUrl');
         res.status(200).json(orders);
     } catch (err) {
         next(err);
@@ -90,7 +95,9 @@ const updateOrderStatus = async (req, res, next) => {
 };
 const getMyOrders = async (req, res, next) => {
     try {
-        const orders = await Order.find({ userId: req.user.id }).populate('items.productId', 'imageUrl');
+        const orders = await Order.find({ userId: req.user.id })
+            .sort({ createdAt: -1 })
+            .populate('items.productId', 'imageUrl');
         res.status(200).json(orders);
     } catch (err) {
         next(err);
