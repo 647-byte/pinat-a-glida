@@ -1,3 +1,8 @@
+/**
+ * @file The app's last middleware: turns every error into a JSON response
+ * the client can display.
+ */
+
 /** Message sent to the client for unexpected server errors (status 500 and above). */
 const SERVER_ERROR_MESSAGE = "אירעה שגיאה בשרת, נסו שוב מאוחר יותר";
 

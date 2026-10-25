@@ -1,3 +1,10 @@
+/**
+ * @file Routes for /users.
+ * Public:   POST /register, POST /login (rate-limited against password guessing).
+ * Signed in: GET /me, PATCH /me.
+ * Admin:    GET /, GET /:id, DELETE /:id, PATCH /:id/role.
+ * Every :id is checked to be a valid MongoDB id before reaching a controller.
+ */
 import { Router } from "express";
 import { register, login, getMe, updateMe, getAllUsers, getUserById, deleteUser, changeRole } from "../controllers/user.controller.js";
 import { integrityCheck, integrityId } from "../middlewares/validate.middleware.js";

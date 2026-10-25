@@ -1,3 +1,8 @@
+/**
+ * @file Request validation middlewares: integrityCheck validates the body
+ * with a Joi schema and returns Hebrew messages; integrityId rejects
+ * invalid MongoDB ids in route parameters.
+ */
 import { isValidObjectId } from "mongoose";
 import { formatValidationError } from "../validators/validationMessages.js";
 
