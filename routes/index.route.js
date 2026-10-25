@@ -1,3 +1,6 @@
+/**
+ * @file Main router: mounts each resource's router on its path.
+ */
 import { Router } from "express";
 import routerProducts from "./product.route.js";
 import routerOrders from "./order.route.js";

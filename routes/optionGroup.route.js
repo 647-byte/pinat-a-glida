@@ -1,3 +1,6 @@
+/**
+ * @file Routes for /optionGroup. Public: GET /. Admin: POST /.
+ */
 import { Router } from "express";
 import { createOptionGroup, getOptionGroups } from '../controllers/optionGroup.controller.js';
 import optionGroupJoiSchema from "../validators/optionGroup.validator.js";

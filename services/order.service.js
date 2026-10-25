@@ -1,6 +1,16 @@
+/**
+ * @file Order business logic: builds the order items from the client's
+ * selections, validates them against the products in the database,
+ * calculates all prices, and reduces stock after an order is saved.
+ */
 import Product from "../models/products.model.js";
 import "../models/optionGroup.model.js";
 
+/**
+ * Creates a 400 error with a Hebrew message for the client.
+ * @param {string} message - The message to show.
+ * @returns {Error} The error, with status and type set.
+ */
 const createError = (message) => {
     const error = new Error(message);
     error.status = 400;
@@ -8,9 +18,27 @@ const createError = (message) => {
     return error;
 };
 
+/**
+ * Returns how many choices a group allows for the selected size, or null
+ * when the group is not limited by size (or the size sets no limit).
+ * @param {Object} group - The option group.
+ * @param {Object|null} size - The selected size.
+ * @returns {number|null} The size's maxChoices, or null.
+ */
 const getSizeLimit = (group, size) =>
     group.limitedBySize && size?.maxChoices ? size.maxChoices : null;
 
+/**
+ * Validates the requested items and builds the items to save, with prices
+ * taken from the database: size price, plus pricePer for every choice beyond
+ * the number included in each group. Checks that each product exists and is
+ * available, the size and choices exist, required groups are chosen, size
+ * limits are kept, and there is enough stock.
+ * @param {Array<Object>} requestedItems - Items from the request body.
+ * @returns {Promise<{ items: Array<Object>, totalPrice: number, neededQuantity: Map<string, number> }>}
+ *   The items to save, the order total, and the units needed per product with a managed quantity.
+ * @throws {Error} A 400 error with a Hebrew message for any invalid item.
+ */
 const buildOrderItems = async (requestedItems) => {
     const items = [];
     let totalPrice = 0;
@@ -104,6 +132,11 @@ const buildOrderItems = async (requestedItems) => {
     return { items, totalPrice, neededQuantity };
 };
 
+/**
+ * Reduces the stock of each product by the units ordered, and marks a
+ * product as unavailable when its stock reaches 0.
+ * @param {Map<string, number>} neededQuantity - Units ordered per product id.
+ */
 const decreaseStock = async (neededQuantity) => {
     for (const [id, needed] of neededQuantity) {
         const product = await Product.findById(id);

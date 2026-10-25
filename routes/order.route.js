@@ -1,3 +1,9 @@
+/**
+ * @file Routes for /orders. All routes require signing in.
+ * Customer: GET /my, GET /:id (own orders only), POST / (during opening hours).
+ * Admin:    GET /, GET /user/:userId, PATCH /:id/status.
+ * Ids are checked to be valid MongoDB ids before reaching a controller.
+ */
 import { Router } from "express";
 import orderSchema from '../validators/order.validator.js';
 import { integrityCheck, integrityId } from "../middlewares/validate.middleware.js";

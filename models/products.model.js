@@ -1,4 +1,9 @@
+/**
+ * @file Product model. A product has either one price, or sizes with their
+ * own prices; quantity null means the stock is not managed.
+ */
 import { model, Schema } from "mongoose";
+/** A size option. maxChoices limits choices in groups marked limitedBySize. */
 const sizeSchema = new Schema(
     {
         name: { type: String, required: true, trim: true },
@@ -7,6 +12,7 @@ const sizeSchema = new Schema(
     },
     { _id: false });
 
+/** A product on the menu. options are the ids of its option groups. */
 const productSchema = new Schema(
     {
         name: { type: String, unique: true, required: true, trim: true },

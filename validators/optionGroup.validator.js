@@ -1,3 +1,6 @@
+/**
+ * @file Joi schema for creating an option group (POST /optionGroup).
+ */
 import Joi from "joi";
 const optionGroupJoiSchema = Joi.object({
     title: Joi.string().required().trim(),

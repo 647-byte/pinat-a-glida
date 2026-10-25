@@ -1,3 +1,7 @@
+/**
+ * @file The environment variables the server uses, in one place.
+ * Values come from .env locally and from the host's settings in production.
+ */
 export const env = {
     MONGO_URL: process.env.MONGO_URL,
     PORT: process.env.PORT,

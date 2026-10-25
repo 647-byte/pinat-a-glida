@@ -1,3 +1,8 @@
+/**
+ * @file Routes for /products.
+ * Public: GET /, GET /popular, GET /:id.
+ * Admin:  POST /, PUT /:id, PATCH /:id (stock), DELETE /:id.
+ */
 import { Router } from "express";
 import { getAllProducts,getSpecificProduct,getPopularProducts,addProduct,deleteProduct,updateProduct,updateQuantity } from "../controllers/products.controller.js";
 import { integrityCheck,integrityId } from "../middlewares/validate.middleware.js";

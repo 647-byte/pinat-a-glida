@@ -1,5 +1,16 @@
+/**
+ * @file Controllers for the /orders routes. Prices and stock are always
+ * calculated on the server (order.service), never taken from the client.
+ */
 import Order from '../models/order.model.js';
 import { buildOrderItems, decreaseStock } from "../services/order.service.js";
+/**
+ * GET /orders - returns all orders, newest first, with the customer's name
+ * and email and each product's image (admin only).
+ * @param {import('express').Request} req - The request.
+ * @param {import('express').Response} res - 200 with an array of orders.
+ * @param {import('express').NextFunction} next - Receives errors.
+ */
 const getAllOrders = async (req, res, next) => {
     try {
         // Newest first; populate replaces the stored ids with the related details
@@ -12,6 +23,13 @@ const getAllOrders = async (req, res, next) => {
         next(err);
     }
 };
+/**
+ * GET /orders/:id - returns one order. A customer may view only her own
+ * orders; an admin may view any order.
+ * @param {import('express').Request} req - req.params.id is the order's id; req.user is set by authenticate.
+ * @param {import('express').Response} res - 200 with the order.
+ * @param {import('express').NextFunction} next - Receives errors (404 if not found, 403 for another customer's order).
+ */
 const getOrderById = async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -33,6 +51,12 @@ const getOrderById = async (req, res, next) => {
         next(err);
     }
 };
+/**
+ * GET /orders/user/:userId - returns a user's orders, newest first (admin only).
+ * @param {import('express').Request} req - req.params.userId is the user's id.
+ * @param {import('express').Response} res - 200 with an array of orders.
+ * @param {import('express').NextFunction} next - Receives errors.
+ */
 const getUserOrders = async (req, res, next) => {
     try {
         const { userId } = req.params;
@@ -44,6 +68,14 @@ const getUserOrders = async (req, res, next) => {
         next(err);
     }
 };
+/**
+ * POST /orders - places an order for the signed-in customer.
+ * buildOrderItems checks every product, size and choice and calculates the
+ * prices; stock is reduced only after the order is saved.
+ * @param {import('express').Request} req - Body: { items, customerDetails, comments? } (validated by orderSchema).
+ * @param {import('express').Response} res - 201 with the saved order, including totalPrice.
+ * @param {import('express').NextFunction} next - Receives errors (400 with a Hebrew message for invalid items or missing stock).
+ */
 const createOrder = async (req, res, next) => {
     try {
         const { items, totalPrice, neededQuantity } = await buildOrderItems(req.body.items);
@@ -61,12 +93,18 @@ const createOrder = async (req, res, next) => {
         next(err);
     }
 };
+/**
+ * PATCH /orders/:id/status - changes an order's status (admin only).
+ * @param {import('express').Request} req - req.params.id is the order's id; body: { statusOrder }.
+ * @param {import('express').Response} res - 200 with the updated order.
+ * @param {import('express').NextFunction} next - Receives errors (400 for an unknown status, 404 if not found).
+ */
 const updateOrderStatus = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { statusOrder } = req.body;
 
-        // רשימת הסטטוסים החוקיים במערכת
+        // The statuses an order can have (same as the enum in order.model)
         const validStatuses = ['pending', 'preparing', 'on_the_way', 'delivered'];
         if (!validStatuses.includes(statusOrder)) {
             const error = new Error("סטטוס הזמנה לא חוקי");
@@ -93,6 +131,12 @@ const updateOrderStatus = async (req, res, next) => {
         next(err);
     }
 };
+/**
+ * GET /orders/my - returns the signed-in customer's own orders, newest first.
+ * @param {import('express').Request} req - req.user is set by authenticate.
+ * @param {import('express').Response} res - 200 with an array of orders.
+ * @param {import('express').NextFunction} next - Receives errors.
+ */
 const getMyOrders = async (req, res, next) => {
     try {
         const orders = await Order.find({ userId: req.user.id })
