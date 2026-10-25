@@ -5,6 +5,7 @@ const optionGroupSchema = new Schema(
         isMust: { type: Boolean, default: false },
         maxChoices: { type: Number, required: true, min: 1 },
         pricePer: { type: Number, default: 0, min: 0 },
+        limitedBySize: { type: Boolean, default: false },
         choices: [{ type: String, trim: true }] // ['לוטוס', 'אוראו', 'קינדר']
     },
     { timestamps: true }
