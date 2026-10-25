@@ -1,14 +1,15 @@
 import Product from "../models/products.model.js";
 import "../models/optionGroup.model.js";
 
-const FLAVORS_TITLE = "טעמים";
-
 const createError = (message) => {
     const error = new Error(message);
     error.status = 400;
     error.type = "bad_request";
     return error;
 };
+
+const getSizeLimit = (group, size) =>
+    group.limitedBySize && size?.maxChoices ? size.maxChoices : null;
 
 const buildOrderItems = async (requestedItems) => {
     const items = [];
@@ -61,12 +62,12 @@ const buildOrderItems = async (requestedItems) => {
                 throw createError(`הבחירה "${invalidChoice}" אינה קיימת ב${group.title}`);
             }
 
-            const isFlavors = group.title === FLAVORS_TITLE && selectedSize?.maxChoices;
-            if (isFlavors && chosen.length > selectedSize.maxChoices) {
-                throw createError(`בגודל "${selectedSize.name}" ניתן לבחור עד ${selectedSize.maxChoices} טעמים`);
+            const sizeLimit = getSizeLimit(group, selectedSize);
+            if (sizeLimit && chosen.length > sizeLimit) {
+                throw createError(`בגודל "${selectedSize.name}" ניתן לבחור עד ${sizeLimit} ב${group.title}`);
             }
 
-            const included = isFlavors ? selectedSize.maxChoices : group.maxChoices;
+            const included = sizeLimit ?? group.maxChoices;
             const extra = Math.max(0, chosen.length - included);
             unitPrice += group.pricePer * extra;
 
