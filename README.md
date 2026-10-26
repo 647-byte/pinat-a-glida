@@ -7,7 +7,21 @@
 
 ---
 
+## קישורים
+
+| מה | כתובת |
+|---|---|
+| האתר (לקוח) | https://647-byte.github.io/pinat-a-glida-client/ |
+| השרת (API) | https://server-pinta.onrender.com |
+| ריפו הלקוח | https://github.com/647-byte/pinat-a-glida-client |
+| ריפו השרת | https://github.com/647-byte/pinat-a-glida |
+
+> השרת רץ בתוכנית החינמית של Render, ולכן "נרדם" אחרי זמן בלי שימוש. הבקשה הראשונה אחרי הפסקה יכולה לקחת עד דקה, ומשם האתר עובד במהירות רגילה.
+
+---
+
 ## תוכן עניינים
+- [קישורים](#קישורים)
 - [טכנולוגיות](#טכנולוגיות)
 - [מבנה הפרויקט](#מבנה-הפרויקט)
 - [התקנה והרצה](#התקנה-והרצה)
@@ -147,7 +161,7 @@ npm run dev
 | `JWT_EXPIRES_IN` | תוקף הטוקן | `7d` |
 | `ORDER_OPENING_TIME` | שעת פתיחה להזמנות | `10:00` |
 | `ORDER_CLOSING_TIME` | שעת סגירה להזמנות | `22:00` |
-| `CLIENT_URL` | כתובת אתר הלקוח (CORS), בלי `/` בסוף | `http://127.0.0.1:5500` |
+| `CLIENT_URL` | כתובת אתר הלקוח (CORS): רק הדומיין, בלי נתיב ובלי `/` בסוף | מקומי: `http://127.0.0.1:5500`, ‏ב-Render: ‏`https://647-byte.github.io` |
 | `ADMIN_NAME` | שם המנהל הראשון (לסקריפט `seed`) | |
 | `ADMIN_EMAIL` | אימייל המנהל הראשון | |
 | `ADMIN_PASSWORD` | סיסמת המנהל הראשון | |
@@ -394,13 +408,22 @@ users ──< orders >── products >──< optiongroups
 
 ## העלאה לשרת (Render)
 
+השרת עלה ל-Render בכתובת https://server-pinta.onrender.com, והאתר עלה ל-GitHub Pages בכתובת https://647-byte.github.io/pinat-a-glida-client/.
+כל `push` לענף `main` בריפו השרת מעלה גרסה חדשה ל-Render אוטומטית.
+
+**השלבים שבוצעו:**
+
 1. יוצרים ב-Render שירות חדש מסוג **Web Service**, ומחברים אותו לריפו ב-GitHub.
 2. בשדה פקודת ההתקנה (**Build Command**) כותבים: `npm install`
 3. בשדה פקודת ההפעלה (**Start Command**) כותבים: `npm start`
 4. בלשונית **Environment** מגדירים את כל המשתנים מהטבלה למעלה, ובנוסף:
-   - המשתנה `TZ` עם הערך `Asia/Jerusalem`, כדי ששעות ההזמנה יחושבו לפי שעון ישראל.
-   - המשתנה `CLIENT_URL` עם הכתובת של אתר הלקוח אחרי ההעלאה, בלי `/` בסוף.
+   - המשתנה `TZ` עם הערך `Asia/Jerusalem`, כדי ששעות ההזמנה יחושבו לפי שעון ישראל (השרתים של Render עובדים לפי UTC).
+   - המשתנה `CLIENT_URL` עם הדומיין של אתר הלקוח בלבד: `https://647-byte.github.io`. בלי שם הריפו ובלי `/` בסוף, כי הדפדפן שולח לשרת רק את הדומיין.
 5. ב-MongoDB Atlas, תחת **Network Access**, מאפשרים גישה מהשרת של Render.
-6. אחרי ההעלאה, מעדכנים את `SERVER_URL` בקובץ `config.js` של הלקוח לכתובת השרת ב-Render.
+6. בקובץ `config.js` של הלקוח, `SERVER_URL` מצביע לכתובת השרת ב-Render.
+
+**העלאת הלקוח ל-GitHub Pages:** בריפו של הלקוח, ‏Settings ← Pages ← ‏Branch: ‏`main`, תיקייה `/ (root)` ← Save.
+
+**הרצה מקומית אחרי ההעלאה:** הקובץ `.env` המקומי נשאר עם `CLIENT_URL=http://127.0.0.1:5500`. כדי שהלקוח המקומי יפנה לשרת המקומי, משנים זמנית את `SERVER_URL` ב-`config.js` ל-`http://127.0.0.1:5000`, ולא מעלים את השינוי ל-GitHub.
 
 </div>
